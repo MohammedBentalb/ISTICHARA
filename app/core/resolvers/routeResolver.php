@@ -3,9 +3,6 @@
 namespace App\Core\Resolvers;
 
 use App\Core\Container\Container;
-use App\Core\Http\Request;
-use App\Core\Http\Response;
-use App\Core\Services\AuthentificationService;
 
 class RouteResolver{
     public function __construct(private MethodResolver $methodResolver) {}

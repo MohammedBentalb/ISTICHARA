@@ -6,9 +6,10 @@ use Dotenv\Dotenv;
 
 require __DIR__ . "/vendor/autoload.php";
 
+(Dotenv::createImmutable(__DIR__))->load();
+
 
 $route = Container::getInstance(Router::class);
 $route->CollectRoutes();
 $route->dispatch();
 
-$dotenv = Dotenv::createImmutable(__DIR__);

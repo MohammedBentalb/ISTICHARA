@@ -3,9 +3,11 @@
 namespace App\Controllers\Avocat;
 
 use App\Core\Attributes\Route;
+use App\Core\Attributes\RouteController;
 
-#[Route("/", ["GET"])]
+#[RouteController]
 class AvocatController {
+   #[Route("/", ["GET"])]
  public function index(){
     echo "hello";
  }

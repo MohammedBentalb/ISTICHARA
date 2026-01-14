@@ -1,11 +1,19 @@
 <?php
 
 namespace App\Models;
+use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Entity]
+#[ORM\Table(name: "villes")]
 class Ville {
     
-private ?int $id = null;
-private string $name;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255, unique: true)]
+    private string $name;
 
     public function getName(){
         return $this->name;

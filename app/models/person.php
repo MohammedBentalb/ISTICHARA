@@ -2,18 +2,37 @@
 
 namespace App\Models;
 
-class Person {
-    protected ?int $id = null;
-    protected string $name;
-    protected string $email;
-    protected int $villeId;
-    protected int $yearsOfExperience;
-    protected string $createdAt;
+use DateTimeImmutable;
+use Doctrine\ORM\Mapping as ORM;
 
-    public function __construct(string $name, string $email, int $villeId, int $yearsOfExperience,string $createdAt, ?int $id = null) {
+#[ORM\MappedSuperclass]
+class Person {
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    protected ?int $id = null;
+
+    #[ORM\Column(length: 100)]
+    protected string $name;
+
+    #[ORM\Column(length: 150, unique: true)]
+    protected string $email;
+
+    #[ORM\ManyToOne(targetEntity: Ville::class)]
+    #[ORM\JoinColumn(name: "ville_id", referencedColumnName: "id", nullable: true, onDelete: "SET NULL")]
+    protected ?Ville $ville = null;
+
+    #[ORM\Column(type: "integer")]
+    protected int $yearsOfExperience;
+
+    #[ORM\Column(type: "datetime_immutable")]
+    protected DateTimeImmutable $createdAt;
+
+
+    public function __construct(string $name, string $email, int $yearsOfExperience, DateTimeImmutable $createdAt, ?Ville $ville, ?int $id = null) {
         $this->name = $name;
         $this->email = $email;
-        $this->villeId = $villeId;
+        $this->ville = $ville;
         $this->yearsOfExperience = $yearsOfExperience;
         $this->createdAt = $createdAt;
         $this->id = $id;
@@ -43,19 +62,19 @@ class Person {
         return $this->email;
     }
 
-    public function getVilleId(){
-        return $this->villeId;
+    public function getVille(){
+        return $this->ville;
     }
     
-    public function setVilleId(int $value){
-        $this->villeId = $value;
+    public function setVille(Ville $value){
+        $this->ville = $value;
     }
 
     public function getYearsOfExperience(){
         return $this->yearsOfExperience;
     }
 
-    public function setYearsOdExperience(int $value){
+    public function setYearsOfExperience(int $value){
         $this->yearsOfExperience = $value;
     }
 
@@ -63,7 +82,7 @@ class Person {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(string $value){
+    public function setCreatedAt( DateTimeImmutable $value){
         $this->createdAt = $value;
     }
 }
