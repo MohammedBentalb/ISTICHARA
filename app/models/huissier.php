@@ -3,23 +3,27 @@
 namespace App\Models;
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
+use App\Core\Attributes\Table as LocalTable;
+
 
 #[ORM\Entity]
+#[ORM\Table(name: "huissiers")]
+#[LocalTable("huissiers")]
 class Huissier extends Person{
     
-#[ORM\Table(name: "huissiers")]
-    private bool $typesSctes;
+    #[ORM\Column(name: "types_actes")]
+    private string $typesActes;
 
-    public function __construct(string $typesSctes, string $name, string $email, int $villeId, int $yearsOfExperience, ?DateTimeImmutable $createdAt, ?int $id = null) {
-        parent::__construct($name, $email, $villeId, $yearsOfExperience, $createdAt, $id);
-        $this->typesSctes = $typesSctes;
+    public function __construct(string $typesActes, string $name, string $email,  int $yearsOfExperience, ?int $id = null) {
+        parent::__construct($name, $email, $yearsOfExperience, $id);
+        $this->typesActes = $typesActes;
     }
 
-    public function getTypesSctes(){
-        return $this->typesSctes;
+    public function getTypesActes(){
+        return $this->typesActes;
     }
 
-    public function setTypesSctes(bool $value){
-        $this->typesSctes = $value;
+    public function setTypesSctes(string $value){
+        $this->typesActes = $value;
     }
 }

@@ -41,7 +41,7 @@ class Router {
         $params = [];
         foreach($this->routes as $route){
             if($route["routePath"] === "/" && $url === "") $url = "/";
-            $pathregex = "#^" . str_replace("{id}", "(\d+)", $route["routePath"]) . "$#";
+            $pathregex = "#^" . str_replace("{id}", "(\d+)", trim($route["routePath"], "/")) . "$#";
             if(preg_match($pathregex, $url, $params)){
                 array_shift($params);
                 $this->routeResolver->resolveRoute($route, $params);

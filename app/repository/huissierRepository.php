@@ -1,5 +1,8 @@
 <?php
 
 namespace App\Repository;
+use App\Models\Huissier;
 
-class avocatRepository extends BaseRepository{}
+class HuissierRepository extends BaseRepository{
+        protected static $entityName = Huissier::class;
+}

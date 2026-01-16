@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Core\Attributes\Preserve;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,31 +11,37 @@ class Person {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Preserve]
     protected ?int $id = null;
-
+    
+    #[Preserve]
     #[ORM\Column(length: 100)]
     protected string $name;
-
+    
     #[ORM\Column(length: 150, unique: true)]
+    #[Preserve]
     protected string $email;
-
-    #[ORM\ManyToOne(targetEntity: Ville::class)]
+    
+    #[ORM\ManyToOne(targetEntity: Ville::class, fetch: "EAGER")]
     #[ORM\JoinColumn(name: "ville_id", referencedColumnName: "id", nullable: true, onDelete: "SET NULL")]
+    #[Preserve]
     protected ?Ville $ville = null;
-
-    #[ORM\Column(type: "integer")]
+    
+    #[ORM\Column(type: "integer", name: 'years_of_experience')]
+    #[Preserve]
     protected int $yearsOfExperience;
+    
+    #[ORM\Column(type: "datetime_immutable", name: 'created_at', insertable: false, updatable: false)]
+    #[ORM\GeneratedValue]
+    #[Preserve]
+    protected ?DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: "datetime_immutable")]
-    protected DateTimeImmutable $createdAt;
 
-
-    public function __construct(string $name, string $email, int $yearsOfExperience, DateTimeImmutable $createdAt, ?Ville $ville, ?int $id = null) {
+    public function __construct(string $name, string $email, int $yearsOfExperience, ?Ville $ville, ?int $id = null) {
         $this->name = $name;
         $this->email = $email;
         $this->ville = $ville;
         $this->yearsOfExperience = $yearsOfExperience;
-        $this->createdAt = $createdAt;
         $this->id = $id;
     }
 
@@ -82,7 +89,7 @@ class Person {
         return $this->createdAt;
     }
 
-    public function setCreatedAt( DateTimeImmutable $value){
+    public function setCreatedAt( ?DateTimeImmutable $value){
         $this->createdAt = $value;
     }
 }
