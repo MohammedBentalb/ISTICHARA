@@ -29,7 +29,7 @@ abstract class BaseRepository {
     }
     
    public function findBy(array $criteria){
-    return $this->em->getRepository(static::$entityName)($criteria);
+    return $this->em->getRepository(static::$entityName)->findBy($criteria);
    }
 
     public function findAll(array $criteria = [], ?int $limit = null, ?int $offset = null){

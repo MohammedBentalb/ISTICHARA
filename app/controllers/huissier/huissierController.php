@@ -25,14 +25,13 @@ class HuissierController {
       
    #[Route("/huissiers/get/{id}", ["GET"])]
    public function showOneHuissier(int $id){
-      $huissier = $this->huissierRepo->find($id);    
-      if(!$huissier){
-         http_response_code(404);
-         echo json_encode(["message" => "huissier $id not found"]);
-         exit();
-      }
-      $result = ($this->toArray->objectToArray($huissier));
-      echo json_encode($result);
+
+      $searchQuery = $this->request->getQuery("search");
+      $filterQuery = $this->request->getQuery("filter");
+      $limit = $this->request->getQuery("limit");
+      $offset = $this->request->getQuery("offset");
+      $huissier = $this->huissierRepo->search($searchQuery, $filterQuery, $limit, $offset);    
+      echo json_encode($huissier);
    }
 
 

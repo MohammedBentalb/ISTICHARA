@@ -13,14 +13,16 @@ use App\Repository\VilleRepository;
 
 #[RouteController]
 class AvocatController {
-
 public function __construct(private Validator $validator, private VilleRepository $villeRepo,  private Request $request, private avocatRepository $avocaRepo, private ToArray $toArray) {}
 
-#[Route("/avocats", ["GET"])]
+   #[Route("/avocats", ["GET"])]
    public function showAvocats(){
-      $avocats = $this->avocaRepo->findAll();    
-      $result = ($this->toArray->objectToArray($avocats));
-      echo json_encode($result);
+      $searchQuery = $this->request->getQuery("search");
+      $filterQuery = $this->request->getQuery("filter");
+      $limit = $this->request->getQuery("limit");
+      $offset = $this->request->getQuery("offset");
+      $avocats = $this->avocaRepo->search($searchQuery, $filterQuery, $limit, $offset);    
+      echo json_encode($avocats);
    }
 
    #[Route("/avocats/get/{id}", ["GET"])]
@@ -44,7 +46,7 @@ public function __construct(private Validator $validator, private VilleRepositor
          $yearsOfExperience = $this->request->getParam("experience");
          $specialty = $this->request->getParam("specialty");
          $consulting = $this->request->getParam("consulting");
-        
+
          $this->validator->isString($name);
          $this->validator->isValidEmail($email);
          $this->validator->isNumber($villeId);
@@ -91,17 +93,18 @@ public function __construct(private Validator $validator, private VilleRepositor
 
          $this->avocaRepo->update($foundAvocat, $villeId);
          echo json_encode(["state" => "success", "message" => "avocat got updated"]);
-         }
       }
-      #[Route("/avocats/delete/{id}", ["POST"])]
-      public function DeletAvocat($id){
-         $foundAvocat = $this->avocaRepo->find($id);
-         if(!$foundAvocat){
-            http_response_code(404);
-            echo json_encode(["message" => "avocat $id not found"]);
-            exit();
-         }
-         $this->avocaRepo->delete($foundAvocat);
-         echo json_encode(["state" => "success", "message" => "avocat got deleted"]);
+   }
+
+   #[Route("/avocats/delete/{id}", ["POST"])]
+   public function DeletAvocat($id){
+      $foundAvocat = $this->avocaRepo->find($id);
+      if(!$foundAvocat){
+         http_response_code(404);
+         echo json_encode(["message" => "avocat $id not found"]);
+         exit();
       }
+      $this->avocaRepo->delete($foundAvocat);
+      echo json_encode(["state" => "success", "message" => "avocat got deleted"]);
+   }
 }
