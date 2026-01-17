@@ -26,7 +26,6 @@ class ParamsResolver{
         foreach($construct->getParameters() as $parameter){
            $type = $parameter->getType();
             if($type && !$type->isBuiltin()){
-                // check if it's and interface and the get default value from IDB 
                 $this->arguments[] = Container::getInstance($type->getName());
                 continue;
             }

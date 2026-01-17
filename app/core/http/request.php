@@ -25,4 +25,8 @@ class Request{
     public function getPreviousPath(){
         return htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, 'UTF-8');
     }
+
+    public function getOrigin(){
+        return $_SERVER['REMOTE_ADDR'] ?? "UNKNOWN";
+    }
 }

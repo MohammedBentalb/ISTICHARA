@@ -3,7 +3,7 @@
 namespace App\Repository;
 use App\Models\Avocat;
 
-class avocatRepository extends BaseRepository{
+class AvocatRepository extends BaseRepository{
     protected static $entityName = Avocat::class;
      private static array $allowedSpecialites = [
         'Droit penal',

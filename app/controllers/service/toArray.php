@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Controllers\service;
+namespace App\Controllers\Service;
 
 use App\Core\Attributes\Preserve;
-use App\Core\Attributes\Table;
 use DateTimeImmutable;
-use Exception;
 use ReflectionClass;
 
 class ToArray {
