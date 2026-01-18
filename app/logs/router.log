@@ -1,0 +1,2 @@
+[2026-01-18T22:37:49.603419+00:00] router.ERROR: undefined Route {"file":"C:\\laragon\\www\\istichara\\app\\core\\router\\router.php","line":51,"trace":"#0 C:\\laragon\\www\\istichara\\index.php(20): App\\Core\\Router\\Router->dispatch()\n#1 {main}","message":"undefined route"} []
+[2026-01-18T22:38:24.768807+00:00] router.ERROR: undefined Route {"file":"C:\\laragon\\www\\istichara\\app\\core\\router\\router.php","line":52,"trace":"#0 C:\\laragon\\www\\istichara\\index.php(20): App\\Core\\Router\\Router->dispatch()\n#1 {main}","message":"undefined route"} []

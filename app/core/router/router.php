@@ -4,6 +4,7 @@ namespace App\Core\Router;
 
 use App\Core\Attributes\Route;
 use App\Core\Attributes\RouteController;
+use App\Core\Http\Exception\LocalErrorException;
 use App\Core\Http\Request;
 use App\Core\Resolvers\RouteResolver;
 use Exception;
@@ -45,7 +46,9 @@ class Router {
             if(preg_match($pathregex, $url, $params)){
                 array_shift($params);
                 $this->routeResolver->resolveRoute($route, $params);
+                exit();
             }
         }
+        throw new LocalErrorException("undefined Route", 'router', "router.log", 404, "undefined route", ["message" => "undefined route"]);
     }
 }

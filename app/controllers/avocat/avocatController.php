@@ -44,7 +44,7 @@ public function __construct(private LogsSystem $logsSystem, private Validator $v
       echo json_encode($send);
    }
 
-   #[Route("/avocats/create", ["POST"])]
+   #[Route("/avocats/create", ["POST"], true, ['ADMIN'])]
    public function createAvocat(){
       if($this->request->getRequestType() === "POST"){
          $name = $this->request->getParam("name");
@@ -60,9 +60,12 @@ public function __construct(private LogsSystem $logsSystem, private Validator $v
          $this->validator->isNumber($yearsOfExperience);
          $this->validator->isString($specialty);
 
+         $foundAvocat = $this->avocaRepo->findOneBy(["email" => trim($email)]);
+         if($foundAvocat) throw new LocalErrorException("duplicated email", "avocat", "avocat.log", 400, "email taken", ["message" => "email taken"]);
+
          $avocat = new Avocat($consulting === "true", $specialty, $name, $email, null, (int) $yearsOfExperience, null);
          $this->avocaRepo->save($avocat, $villeId);
-         $send = ["state" => "success", "message" => "avocat got inserted"];
+         $send = ["status" => "success", "message" => "avocat got inserted"];
       
          $context = ["sent" => $send, "receiver" => $this->request->getOrigin(), "location" => AvocatController::class, "classMethod" => "createAvocat"];
          $this->logsSystem->logResponse($context);      
@@ -70,7 +73,7 @@ public function __construct(private LogsSystem $logsSystem, private Validator $v
       }
    }
 
-   #[Route("/avocats/update/{id}", ["POST"])]
+   #[Route("/avocats/update/{id}", ["POST"], true, ['ADMIN'])]
    public function updateAvocat($id){
       if($this->request->getRequestType() === "POST"){
          
@@ -94,7 +97,7 @@ public function __construct(private LogsSystem $logsSystem, private Validator $v
          if(!$foundVille) throw new LocalErrorException("error", "avocat", "avocat.log", 404, "Ville $id not found", ['message' => "ville $id not found"]);
 
          $this->avocaRepo->update($foundAvocat, $villeId);
-         $send = ["state" => "success", "message" => "avocat got updated"];
+         $send = ["status" => "success", "message" => "avocat got updated"];
 
          $context = ["sent" => $send, "receiver" => $this->request->getOrigin() ,"location" => AvocatController::class, "classMethod" => "updateAvocat"];
          $this->logsSystem->logResponse($context);
@@ -103,13 +106,13 @@ public function __construct(private LogsSystem $logsSystem, private Validator $v
       }
    }
 
-   #[Route("/avocats/delete/{id}", ["POST"])]
+   #[Route("/avocats/delete/{id}", ["POST"], true, ['ADMIN'])]
    public function deletAvocat($id){
       $foundAvocat = $this->avocaRepo->find($id);
       if(!$foundAvocat) throw new LocalErrorException("error", "avocat", "avocat.log", 400, "avocat $id not found", ["message" => "avocat $id not found"]);
 
       $this->avocaRepo->delete($foundAvocat);
-      $send = ["state" => "success", "message" => "avocat got deleted"]; 
+      $send = ["status" => "success", "message" => "avocat got deleted"]; 
       
       $context = ["sent" => $send, "receiver" => $this->request->getOrigin() ,"location" => AvocatController::class, "classMethod" => "deleteAvocat"];
       $this->logsSystem->logResponse($context);

@@ -18,7 +18,7 @@ class HuissierController {
  
    public function __construct(private LogsSystem $logsSystem, private Validator $validator, private VilleRepository $villeRepo, private HuissierRepository $huissierRepo, private ToArray $toArray, private Request $request) {}
 
-   #[Route("/huissiers", ["GET"])]
+   #[Route("/huissiers", ["GET"], true, ['ADMIN'])]
    public function showHuissiers(){
       $searchQuery = $this->request->getQuery("search");
       $filterQuery = $this->request->getQuery("filter");
@@ -28,7 +28,7 @@ class HuissierController {
       echo json_encode($huissier);
    }
       
-   #[Route("/huissiers/get/{id}", ["GET"])]
+   #[Route("/huissiers/get/{id}", ["GET"], true, ['ADMIN'])]
    public function showOneHuissier(int $id){
       $huissier = $this->huissierRepo->find($id); 
       if(!$huissier) throw new LocalErrorException("error", "huissier", "huissier.log", 404, "huissier $id not found", ["message" => "Huissier $id not found"]);
@@ -40,9 +40,8 @@ class HuissierController {
       $this->logsSystem->logResponse($context);
       echo json_encode($send);
    }
-
    
-   #[Route("/huissiers/create", ["POST"])]
+   #[Route("/huissiers/create", ["POST"], true, ['ADMIN'])]
    public function createHuissier(){
       if($this->request->getRequestType() === "POST"){
          $name = $this->request->getParam("name");
@@ -57,17 +56,20 @@ class HuissierController {
          $this->validator->isNumber($villeId);
          $this->validator->isNumber($yearsOfExperience);
 
+         $foundHuissier = $this->huissierRepo->findOneBy(["email" => trim($email)]);
+         if($foundHuissier) throw new LocalErrorException("duplicated email", "huissier", "huissier.log", 400, "email taken", ["message" => "email taken"]);
+
          $huissier = new Huissier($actes, $name, $email, (int) $yearsOfExperience, null);
                   
          $foundVulle = $this->villeRepo->find($villeId);
          if(!$foundVulle)  throw new LocalErrorException("error", "huissier", "huissier.log", 404, "city $villeId not found", ["message" => "ville $villeId not found"]);
          
          $this->huissierRepo->save($huissier, $villeId);
-         echo json_encode(["message" => 'success']);
+         echo json_encode(["status" => 'success', "message" => "huissier got inserted"]);
       }
    }
 
-   #[Route("/huissiers/update/{id}", ["POST"])]
+   #[Route("/huissiers/update/{id}", ["POST"], true, ['ADMIN'])]
    public function updateAvocat($id){
       if($this->request->getRequestType() === "POST"){
          
@@ -93,11 +95,11 @@ class HuissierController {
       }
    }
 
-   #[Route("/huissiers/delete/{id}", ["POST"])]
+   #[Route("/huissiers/delete/{id}", ["POST"], true, ['ADMIN'])]
    public function deletHuissier($id){
       $foundHuissier = $this->huissierRepo->find($id);
       if(!$foundHuissier) throw new LocalErrorException("error", "huissier", "huissier.log", 404, "huissier $id not found", ["message" => "Huissier $id not found"]);
       $this->huissierRepo->delete($foundHuissier);
-      echo json_encode(["state" => "success", "message" => "avocat got deleted"]);
+      echo json_encode(["status" => "success", "message" => "avocat got deleted"]);
    }
 }
