@@ -59,10 +59,8 @@ CREATE TYPE user_role AS ENUM (
     'GUEST'
 );
 
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";
-
 CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id serial PRIMARY KEY DEFAULT(),
     name VARCHAR(150) NOT NULL,
     email VARCHAR(180) NOT NULL UNIQUE,
     password TEXT NOT NULL,

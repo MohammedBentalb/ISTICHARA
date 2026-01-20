@@ -49,10 +49,10 @@ public function __construct(private LogsSystem $logsSystem, private Validator $v
       if($this->request->getRequestType() === "POST"){
          $name = $this->request->getParam("name");
          $email = $this->request->getParam("email");
-         $villeId = $this->request->getParam("ville");
-         $yearsOfExperience = $this->request->getParam("experience");
-         $specialty = $this->request->getParam("specialty");
-         $consulting = $this->request->getParam("consulting");
+         $villeId = $this->request->getParam("ville_id");
+         $yearsOfExperience = $this->request->getParam("yearsOfExperience");
+         $specialty = $this->request->getParam("specialite");
+         $consulting = $this->request->getParam("consulting"); 
 
          $this->validator->isString($name);
          $this->validator->isValidEmail($email);
@@ -79,10 +79,10 @@ public function __construct(private LogsSystem $logsSystem, private Validator $v
          
          $name = $this->request->getParam("name");
          $email = $this->request->getParam("email");
-         $villeId = $this->request->getParam("ville");
-         $yearsOfExperience = $this->request->getParam("experience");
-         $specialty = $this->request->getParam("specialty");
-         $consulting = $this->request->getParam("consulting");
+         $villeId = $this->request->getParam("ville_id");
+         $yearsOfExperience = $this->request->getParam("yearsOfExperience");
+         $specialty = $this->request->getParam("specialite");
+         $consulting = $this->request->getParam("consulting"); 
 
          $foundAvocat = $this->avocaRepo->find($id);
          if(!$foundAvocat) throw new LocalErrorException("error", "avocat", "avocat.log", 404, "avocat $id not found", ["message" => "avocat $id not found"]); 

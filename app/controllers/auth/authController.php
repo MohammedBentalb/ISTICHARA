@@ -12,6 +12,8 @@ use App\Core\Jwt\JwtManager;
 use App\Models\User;
 use App\Repository\UserRepository;
 use Carbon\Carbon;
+use Doctrine\DBAL\Types\VarDateTimeImmutableType;
+use Random\Engine\Secure;
 
 #[RouteController]
 class AuthController {
@@ -52,7 +54,6 @@ class AuthController {
     public function login(){
         $email = $this->request->getParam("email");
         $password = $this->request->getParam("password");
-
         $this->validator->isValidEmail($email);
         $this->validator->isString($password);
 
@@ -68,8 +69,8 @@ class AuthController {
         $user->setRefreshToken($refreshToken);
         $this->userRepo->save($user);
 
-        setcookie("access_token", $jwtToken, ["expires" => (Carbon::now())->addMinutes(15)->timestamp, "httponly" => false, "path" => "/", "samesite" => "lax"]);
-        setcookie( "refresh_token", $refreshToken, ["expires" => (Carbon::now())->addDays(7)->timestamp, "httponly" => false, "path" => "/", "samesite" => "lax"]);
+        setcookie("access_token", $jwtToken, ["expires" => (Carbon::now())->addMinutes(15)->timestamp, "httponly" => false, "path" => "/", "samesite" => "lax","secure" => false ]);
+        setcookie( "refresh_token", $refreshToken, ["expires" => (Carbon::now())->addDays(7)->timestamp, "httponly" => false, "path" => "/", "samesite" => "lax","secure" => false ]);
 
         $userInfo = $this->toArray->objectToArray($user);
         unset($userInfo['password'], $userInfo['refreshToken']);

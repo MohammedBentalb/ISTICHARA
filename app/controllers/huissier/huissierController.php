@@ -18,7 +18,7 @@ class HuissierController {
  
    public function __construct(private LogsSystem $logsSystem, private Validator $validator, private VilleRepository $villeRepo, private HuissierRepository $huissierRepo, private ToArray $toArray, private Request $request) {}
 
-   #[Route("/huissiers", ["GET"], true, ['ADMIN'])]
+   #[Route("/huissiers", ["GET"])]
    public function showHuissiers(){
       $searchQuery = $this->request->getQuery("search");
       $filterQuery = $this->request->getQuery("filter");
@@ -46,10 +46,10 @@ class HuissierController {
       if($this->request->getRequestType() === "POST"){
          $name = $this->request->getParam("name");
          $email = $this->request->getParam("email");
-         $villeId = $this->request->getParam("ville");
-         $yearsOfExperience = $this->request->getParam("experience");
+         $villeId = $this->request->getParam("ville_id");
+         $yearsOfExperience = $this->request->getParam('yearsOfExperience');
          $actes = $this->request->getParam("types_actes");
-        
+         
          $this->validator->isString($name);
          $this->validator->isString($actes);
          $this->validator->isValidEmail($email);
@@ -75,9 +75,10 @@ class HuissierController {
          
          $name = $this->request->getParam("name");
          $email = $this->request->getParam("email");
-         $villeId = $this->request->getParam("ville");
-         $yearsOfExperience = $this->request->getParam("experience");
-         $actes = $this->request->getParam("types_actes");
+         $villeId = $this->request->getParam("ville_id");
+         $yearsOfExperience = $this->request->getParam('yearsOfExperience');
+         $actes = $this->request->getParam("typesActes");
+
 
          $foundHuissier = $this->huissierRepo->find($id);
          if(!$foundHuissier)  throw new LocalErrorException("error", "huissier", "huissier.log", 404, "huissier $id not found", ["message" => "Huissier $id not found"]);

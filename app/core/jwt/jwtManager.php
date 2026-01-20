@@ -14,7 +14,7 @@ use Firebase\JWT\Key;
 class JwtManager {
     public function generate(array $payload){
         $createdAt = Carbon::now();
-        $expiredAt = $createdAt->copy()->addMinutes(2);
+        $expiredAt = $createdAt->copy()->addMinutes(20);
         // $expiredAt = $createdAt->copy()->addMinutes(10);
         $payload['iat'] = $createdAt->timestamp;
         $payload['exp'] = $expiredAt->timestamp;
@@ -23,8 +23,8 @@ class JwtManager {
 
     public function generateRefresh(array $payload){
         $createdAt = Carbon::now();
-        $expiredAt = $createdAt->copy()->addMinutes(4);
-        // $expiredAt = $createdAt->copy()->addDays(3);
+        // $expiredAt = $createdAt->copy()->addMinutes(10);
+        $expiredAt = $createdAt->copy()->addDays(3);
         $payload['iat'] = $createdAt->timestamp;
         $payload['exp'] = $expiredAt->timestamp;
         return JWT::encode($payload, $_ENV['JWT_REFRESH_KEY'], "HS256");
